@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test cookies API</title>
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+  <style>
+    .container {
+      padding: 30px;
+    }
+    .add-cookie-group {
+      margin-bottom: 30px;
+      max-width: 250px;
+    }
+    .cookie-list {
+      margin-top: 30px;
+    }
+    .item {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <form class="add-cookie-group" role="form">
+      <div class="form-group">
+        <label class="sr-only" for="ipt-cookie-key">Email key</label>
+        <input type="text" class="form-control" id="ipt-cookie-key" placeholder="Enter key">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="ipt-cookie-value">Email value</label>
+        <input type="text" class="form-control" id="ipt-cookie-value" placeholder="Enter value">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="ipt-cookie-expires">Email expires</label>
+        <input type="text" class="form-control" id="ipt-cookie-expires" placeholder="Enter expires">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="ipt-cookie-path">Email path</label>
+        <input type="text" class="form-control" id="ipt-cookie-path" placeholder="Enter path">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="ipt-cookie-domain">Email domain</label>
+        <input type="text" class="form-control" id="ipt-cookie-domain" placeholder="Enter domain">
+      </div>
+      <button type="button" class="btn btn-default" id="btn-add-cookie">add cookies</button>
+    </form>
+
+    <button type="button" class="btn btn-primary" id="but-get-all">get all cookies</button>
+
+    <ul class="cookie-list" id="cookie-list"></ul>
+  </div>
+
+<script src="./index.js"></script>
+
+<script>
+  var $coolieList = document.getElementById('cookie-list');
+  var $btnGetAll = document.getElementById('but-get-all');
+  var $btnAddCookie = document.getElementById('btn-add-cookie');
+  var $iptCookiekey = document.getElementById('ipt-cookie-key');
+  var $iptCookieValue = document.getElementById('ipt-cookie-value');
+  var $iptCookieExpires = document.getElementById('ipt-cookie-expires');
+  var $iptCookiePath = document.getElementById('ipt-cookie-path');
+  var $iptCookieDomain = document.getElementById('ipt-cookie-domain');
+
+  $btnGetAll.addEventListener('click', function () {
+    var _cookies = cookie.get();
+    for (var _key in _cookies) {
+      renderItemNode(_key, _cookies[_key]);
+    }
+  });
+
+  $btnAddCookie.addEventListener('click', function () {
+    var _key = $iptCookiekey.value;
+    var _value = $iptCookieValue.value;
+    var _expires = $iptCookieExpires.value;
+    var _path = $iptCookiePath.value;
+    var _domain = $iptCookieDomain.value;
+
+    if (!_key) {
+      alert('please enter key of cookie');
+      return ;
+    }
+    if (!_value) {
+      alert('please enter value of cookie');
+      return ;
+    }
+
+    var _option = {};
+    _expires && (_option.expires = _expires);
+    _path && (_option.path = _path);
+    _domain && (_option.domain = _domain);
+
+    cookie.set(_key, _value, _option);
+    renderItemNode(_key, _value);
+  });
+
+  function renderItemNode(key, value) {
+    var $item = document.createElement('li');
+    $item.className = 'item';
+    $item.setAttribute('key', key);
+    $item.setAttribute('value', value);
+
+    var $key = document.createElement('span');
+    $key.className = 'item-key';
+    $key.innerText = key;
+
+    var $colon = document.createElement('span');
+    $colon.innerText = ' : ';
+
+    var $value = document.createElement('span');
+    $value.className = 'item-value';
+    $value.innerText = value + ' ';
+
+    var $btnDel = document.createElement('button');
+    $btnDel.className = ['btn', 'btn-danger', 'btn-delete', 'btn-xs'].join(' ');
+    $btnDel.innerText = 'delete';
+    $btnDel.addEventListener('click', deleteCookie);;
+
+    $item.appendChild($key);
+    $item.appendChild($colon);
+    $item.appendChild($value);
+    $item.appendChild($btnDel);
+
+    $coolieList.appendChild($item);
+  }
+
+  function deleteCookie() {
+    var $item = this.parentElement;
+    var _key = $item.getAttribute('key');
+    cookie.remove(_key);
+  }
+
+</script>
+</body>
+</html>
