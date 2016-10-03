@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>test cookies API</title>
-  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+  <link href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .container {
       padding: 30px;
@@ -131,6 +131,7 @@
     var $item = this.parentElement;
     var _key = $item.getAttribute('key');
     cookie.remove(_key);
+    $item.remove();
   }
 
 </script>
